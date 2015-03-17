@@ -15,9 +15,21 @@ public class Site {
     private String nomSite;
     private String URL;
     private String fluxRSS;
-    private RSSAgent agentRSS;
+    private RSSAgent agentRSS = new RSSAgent();
     private ArrayList<News> listeNews = new ArrayList<News>();
 
+    public Site(){
+        this.nomSite = "";
+        this.fluxRSS = "";
+        this.URL = "";
+    }
+    
+    public Site(String nomSite, String URL, String fluxRSS){
+        this.nomSite = nomSite;
+        this.URL = URL;
+        this.fluxRSS = fluxRSS;
+    }
+    
     public String getNomSite() {
         return nomSite;
     }
@@ -58,15 +70,22 @@ public class Site {
         this.agentRSS = agentRSS;
     }
     
-    public boolean ajouterNews(String nomNews, String description, String adresse){
+    public boolean ajouterNews(){
+        int i;
+        ArrayList<String> listeTitre;
+        ArrayList<String> listeDescription;
+        ArrayList<String> listeLien;
+        ArrayList<String> listeUrlImage;
         agentRSS.setAddress(fluxRSS);
-        if(nomNews != null && description != null && adresse != null){
-            News news = new News(nomNews, description, adresse);
+        listeTitre = agentRSS.getTitle();
+        listeDescription = agentRSS.getDescription();
+        listeLien = agentRSS.getLink();
+        listeUrlImage = agentRSS.getImage();
+        for(i=0;i<listeTitre.size();i++){
+            News news = new News(listeTitre.get(i), listeDescription.get(i), listeLien.get(i), listeUrlImage.get(i));
             listeNews.add(news);
-            return true;
-        }else{
-            return false;
         }
+        return true;
     }
     
     public boolean supprimerNews(String nomNews){
@@ -77,5 +96,10 @@ public class Site {
             }
         }
         return false;
+    }
+    
+    @Override
+    public String toString(){
+        return "Nom du site: " + nomSite + " / URL: " + URL + " / Flux RSS: " + fluxRSS;
     }
 }

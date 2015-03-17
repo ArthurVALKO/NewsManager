@@ -15,6 +15,14 @@ public class Categorie {
     private String nomCategorie;
     private ArrayList<Site> listeSites = new ArrayList<Site>();
     
+    public Categorie(){
+        this.nomCategorie = "";
+    }
+    
+    public Categorie(String nomCategorie){
+        this.nomCategorie = nomCategorie;
+    }
+    
     public void setNomCategorie(String nomCategorie){
         this.nomCategorie = nomCategorie;
     }
@@ -32,11 +40,23 @@ public class Categorie {
     }
     
     public boolean ajouterSite(String nomSite, String URL, String fluxRSS){
-        return true;
+        if(nomSite != null && URL != null && fluxRSS != null){
+            Site site = new Site(nomSite, URL, fluxRSS);
+            listeSites.add(site);
+            return true;
+        }else{
+            return false;
+        }
     }
     
     public boolean supprimerSite(String nomSite){
-        return true;
+        for(Site s : listeSites){
+            if(s.getNomSite().equals(nomSite)){
+                listeSites.remove(s);
+                return true;
+            }
+        }
+        return false;
     }
     
 }

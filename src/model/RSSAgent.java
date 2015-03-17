@@ -1,5 +1,4 @@
 package model;
-
 import org.w3c.dom.*; 
 import org.xml.sax.*;
 import javax.xml.xpath.*; 
@@ -24,6 +23,10 @@ public class RSSAgent{
 	 * Constructeur de la classe RSSAgent.
 	 * @param address represente l'adresse du flux rss
 	 */
+        public RSSAgent(){
+            address = "";
+        }
+        
 	public RSSAgent(String address){
 		this.address=address;
 	}
@@ -42,7 +45,7 @@ public class RSSAgent{
 	 * @return une liste des titres de chaque news ou une liste vide 
 	 * si aucun titre n'est disponible
 	 */
-	public List<String> getTitle(){
+	public ArrayList<String> getTitle(){
 		ArrayList<String> allTitle=new ArrayList<String>();
 		try{
 			URL url = new URL(getAddress());
@@ -69,7 +72,7 @@ public class RSSAgent{
 	 * @return une liste des descriptions de chaque news ou une liste vide 
 	 * si aucune description n'est disponible
 	 */
-	public List<String> getDescription(){
+	public ArrayList<String> getDescription(){
 		ArrayList<String> allDescription=new ArrayList<String>();
 		try{
 			URL url = new URL(getAddress());
@@ -90,13 +93,36 @@ public class RSSAgent{
 			return allDescription;
 		}
 	}
+		
+		public ArrayList<String> getImage(){
+			ArrayList<String> allDescription=new ArrayList<String>();
+			try{
+				URL url = new URL(getAddress());
+				String expression = "//item/enclosure/url";
+				
+				NodeList list = evaluer(url.openStream(),expression);
+
+				if(list != null){
+					//Descriptions des articles disponibles a l'adresse address
+					for(int i=0; i<list.getLength(); i++){
+						Node node = list.item(i);
+						allDescription.add(node.getTextContent());	
+					}	
+				}
+
+				return allDescription;
+			}catch(Exception e){
+				e.printStackTrace();	
+				return allDescription;
+			}
+	}
 
 	/**
 	 * Methode renvoyant une liste des liens de chaque news
 	 * @return une liste des descriptions de chaque news ou une liste vide 
 	 * si aucun lien n'est disponible
 	 */
-	public List<String> getLink(){
+	public ArrayList<String> getLink(){
 		ArrayList<String> allLink=new ArrayList<String>();
 		try{
 			URL url = new URL(getAddress());

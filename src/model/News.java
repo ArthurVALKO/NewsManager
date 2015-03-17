@@ -13,6 +13,7 @@ public class News {
     private String nomNews;
     private String description;
     private String adresse;
+	private String urlImage;
 
     public News() {
         this.nomNews = "";
@@ -25,8 +26,15 @@ public class News {
         this.description = description;
         this.adresse = adresse;
     }
+    public News(String nomNews, String description, String adresse, String urlImage) {
+        this.nomNews = nomNews;
+        this.description = description;
+        this.adresse = adresse;
+        this.urlImage = urlImage;
+    }
     
-    public String getNomNews() {
+
+	public String getNomNews() {
         return nomNews;
     }
 
@@ -48,5 +56,13 @@ public class News {
 
     public void setAdresse(String adresse) {
         this.adresse = adresse;
+    }
+    
+    @Override
+    public String toString(){
+        return "Nom de news: " + nomNews + " / description: " + description + " / adresse: " + adresse;
+    }
+    public String toStringImage(){    
+		return urlImage;
     }
 }

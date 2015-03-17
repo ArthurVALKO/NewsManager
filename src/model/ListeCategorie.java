@@ -22,12 +22,40 @@ public class ListeCategorie {
         return listeCategories.get(indice);
     }
     
+    public Categorie getCategorie(String nomCategorie){
+        for(Categorie cat: listeCategories){
+            if(cat.getNomCategorie().equals(nomCategorie))
+                return cat;
+        }
+        return null;
+    }
+    
     public boolean ajoutCategorie(String nomCategorie){
-        return true;
+        if(nomCategorie != null){
+            Categorie cat = new Categorie(nomCategorie);
+            listeCategories.add(cat);
+            return true;
+        }
+        return false;
     }
     
     public boolean supprimerCategorie(String nomCategorie){
-        return true;
+        for(Categorie cat: listeCategories){
+            if(cat.getNomCategorie().equals(nomCategorie)){
+                listeCategories.remove(cat);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString(){
+        String texte = "";
+        for(Categorie cat:listeCategories){
+            texte += cat.getNomCategorie();
+        }
+        return texte;
     }
     
     public boolean enregistrer(String nomFichier){
