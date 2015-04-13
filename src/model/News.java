@@ -15,7 +15,15 @@ public class News {
     private String adresse;
 	private String urlImage;
 
-    public News() {
+    public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
+	}
+
+	public News() {
         this.nomNews = "";
         this.description = "";
         this.adresse = "";

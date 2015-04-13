@@ -1,7 +1,9 @@
 package model;
 import org.w3c.dom.*; 
 import org.xml.sax.*;
+
 import javax.xml.xpath.*; 
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -17,6 +19,14 @@ import java.util.List;
  */
 public class RSSAgent{
 
+	private XPathFactory fabrique = XPathFactory.newInstance();
+	private XPath xpath = fabrique.newXPath();
+	private XPathExpression exp;
+	
+	
+	
+	
+	
 	private String address;
 	
 	/**
@@ -98,7 +108,7 @@ public class RSSAgent{
 			ArrayList<String> allDescription=new ArrayList<String>();
 			try{
 				URL url = new URL(getAddress());
-				String expression = "//item/enclosure/url";
+				String expression = "//item/enclosure/@url";
 				
 				NodeList list = evaluer(url.openStream(),expression);
 
@@ -160,17 +170,62 @@ public class RSSAgent{
 			InputSource source = new InputSource(stream);
 
 			//Creation du XPath 
-			XPathFactory fabrique = XPathFactory.newInstance();
-			XPath xpath = fabrique.newXPath();
+			//fabrique = XPathFactory.newInstance();
+			//xpath = fabrique.newXPath();
 
 			//Evaluation de l'expression XPath
-			XPathExpression exp = xpath.compile(expression);
+			exp = xpath.compile(expression);
 			list = (NodeList)exp.evaluate(source,XPathConstants.NODESET);
 
 		}catch(XPathExpressionException xpee){
 			xpee.printStackTrace();
 		}
 		return list;
+	}
+	
+	
+	
+
+	public void RecuperationInformation(Site site) {
+		try {
+			InputSource source = new InputSource(site.getFluxRSS().openStream());
+			site.setNomSite(evaluerNomSite(source));
+			//recuperation de la liste Item ou news
+			NodeList listNews = evaluer2(source,"//item");
+			
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	private NodeList evaluer2(InputSource source, String expression) {
+		NodeList list = null;
+		try{
+			//Evaluation de l'expression XPath
+			exp = xpath.compile(expression);
+			list = (NodeList)exp.evaluate(source,XPathConstants.NODESET);
+
+		}catch(XPathExpressionException xpee){
+			xpee.printStackTrace();
+		}
+		return list;
+	}
+
+	private String evaluerNomSite(InputSource source) {
+		String titre = null;
+		try {
+			exp = xpath.compile("//titre");
+			titre = (String)exp.evaluate(source,XPathConstants.NODESET);
+	
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return titre;
 	}
 
 }

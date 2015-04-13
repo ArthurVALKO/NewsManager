@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -41,8 +43,13 @@ public class Categorie {
     
     public boolean ajouterSite(String nomSite, String URL, String fluxRSS){
         if(nomSite != null && URL != null && fluxRSS != null){
-            Site site = new Site(nomSite, URL, fluxRSS);
-            listeSites.add(site);
+			try {
+				Site site = new Site(nomSite,new URL(URL), new URL(fluxRSS));
+	            listeSites.add(site);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             return true;
         }else{
             return false;

@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -13,20 +14,32 @@ import java.util.ArrayList;
  */
 public class Site {
     private String nomSite;
-    private String URL;
-    private String fluxRSS;
+    private URL url;
+    private URL fluxRSS;
     private RSSAgent agentRSS = new RSSAgent();
     private ArrayList<News> listeNews = new ArrayList<News>();
 
-    public Site(){
+    public boolean actualiser(){
+    	RSSAnaliseur rss = new RSSAnaliseur(this);
+    	return true;
+    }
+  
+
+	public Site(){
         this.nomSite = "";
-        this.fluxRSS = "";
-        this.URL = "";
+        this.fluxRSS = null;
+        this.url = null;
     }
     
-    public Site(String nomSite, String URL, String fluxRSS){
+    public Site(URL fluxRSS){
+    	this.fluxRSS = fluxRSS;
+    //	agentRSS.RecuperationInformation(this);
+    	
+    }
+    
+    public Site(String nomSite, URL url, URL fluxRSS){
         this.nomSite = nomSite;
-        this.URL = URL;
+        this.url = url;
         this.fluxRSS = fluxRSS;
     }
     
@@ -34,11 +47,11 @@ public class Site {
         return nomSite;
     }
 
-    public String getURL() {
-        return URL;
+    public URL getURL() {
+        return url;
     }
 
-    public String getFluxRSS() {
+    public URL getFluxRSS() {
         return fluxRSS;
     }
 
@@ -58,17 +71,23 @@ public class Site {
         this.nomSite = nomSite;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setURL(URL URL) {
+        this.url = URL;
     }
 
-    public void setFluxRSS(String fluxRSS) {
+    public void setFluxRSS(URL fluxRSS) {
         this.fluxRSS = fluxRSS;
     }
 
     public void setAgentRSS(RSSAgent agentRSS) {
         this.agentRSS = agentRSS;
     }
+    public void setListeNews(ArrayList<News> listeNews) {
+		this.listeNews = listeNews;
+	}
+    
+    
+
     
     public boolean ajouterNews(){
         int i;
@@ -76,13 +95,13 @@ public class Site {
         ArrayList<String> listeDescription;
         ArrayList<String> listeLien;
         ArrayList<String> listeUrlImage;
-        agentRSS.setAddress(fluxRSS);
+        agentRSS.setAddress(fluxRSS.toString());
         listeTitre = agentRSS.getTitle();
         listeDescription = agentRSS.getDescription();
         listeLien = agentRSS.getLink();
         listeUrlImage = agentRSS.getImage();
         for(i=0;i<listeTitre.size();i++){
-            News news = new News(listeTitre.get(i), listeDescription.get(i), listeLien.get(i), listeUrlImage.get(i));
+            News news = new News(listeTitre.get(i), listeDescription.get(i), listeLien.get(i));
             listeNews.add(news);
         }
         return true;
@@ -97,9 +116,11 @@ public class Site {
         }
         return false;
     }
-    
+
     @Override
     public String toString(){
-        return "Nom du site: " + nomSite + " / URL: " + URL + " / Flux RSS: " + fluxRSS;
+        return "Nom du site: " + nomSite + " / URL: " + url + " / Flux RSS: " + fluxRSS;
     }
+
+	
 }
